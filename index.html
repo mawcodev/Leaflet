@@ -136,6 +136,17 @@
         
         function setBounds() {}
         
+		var img__0 = 'data/_0.png';
+        var img_bounds__0 = [[35.9005785440016,-9.378595334951417],[43.89024101905597,3.436090360842075]];
+        var layer__0 = new L.imageOverlay(img__0, img_bounds__0);
+        bounds_group.addLayer(layer__0);
+        //map.addLayer(layer__0);
+        var img_incendio_1 = 'data/incendio_1.png';
+        var img_bounds_incendio_1 = [[38.940827497120885,-0.34859756632133443],[39.002692542436,-0.24808798876083304]];
+        var layer_incendio_1 = new L.imageOverlay(img_incendio_1, img_bounds_incendio_1);
+        bounds_group.addLayer(layer_incendio_1);
+        //map.addLayer(layer_incendio_1);
+
         //Tiff lluvias
         var img_lluviasextract_0 = 'data/lluviasextract_0.png';
         var img_bounds_lluviasextract_0 = [
@@ -213,7 +224,7 @@
 			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
 			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
 		}});
-		var Campo2 = new L.Shapefile('OLIVERAS2.zip',{
+		var Campo1 = new L.Shapefile('OLIVERAS1.zip',{
 			onEachFeature: function(feature,marker) {
 			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
 			+feature.properties.AREA+" m2<br><b> Perímetro:"+feature.properties.PERIMETRO+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
@@ -256,8 +267,10 @@
 		groupName : "Efectos",
 		layers : {
 			"Incendio" : incendio,
-			"Cultivos": shpfile,
-			"Lluvias": layer_lluviasextract_0
+			"Cultivos": Campo1,
+			"Lluvias": layer_lluviasextract_0,
+			"Temperaturas": layer__0,
+			"Incendio": layer_incendio_1
 			}
 		}, {
 		groupName: "Contornos",
