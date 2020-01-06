@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+<!-- Estilos css --> 
+    <link rel="stylesheet" href="css/leaflet.css">
+	<link rel="stylesheet" href="css/qgis2web.css">
+    <link rel="stylesheet" href="css/fontawesome-all.min.css">
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+	<title>Diatthew</title>
+<!-- Plugin para Leaflet -->	
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+	<script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+	
+<!-- Plugin para Estilos Control de Capas -->	
+	<link rel="stylesheet" href="Plugins/styledLayerControl.css"/>
+	<script src="Plugins/styledLayerControl.js"></script>
+	
+<!-- Estilos css -->
+	<link rel="stylesheet" href="Plugins/oliveras_MOD.css"/>
+	
+<!-- Plugin para Medición areas y distancias-->		
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.css" >
+	<link rel="stylesheet" href="Plugins/leaflet-measure_files/leaflet-measure.css">
+
+<!-- Plugin para zoom ventana-->		
+	<script src="Plugins/leaflet-control-boxzoom.js"></script>
+	<link rel="stylesheet" href="Plugins/leaflet-control-boxzoom.css" />	
+
+<!-- Plugin para zoom casa-->	
+	<link rel="stylesheet" href="Plugins/leaflet.zoomhome.css"/>
+	<script src="Plugins/leaflet.zoomhome.min.js"></script>
+
+<!-- Plugin para Impresión -->		
+	 <link href='http://fonts.googleapis.com/css?family=Lato:900,300' rel='stylesheet' type='text/css'>
+	<link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+
+<!-- Leaflet Minimapa -->
+	<link rel="stylesheet" href="Plugins/L.Control.MousePosition.css" />
+	<link rel="stylesheet" href="Plugins/Control.MiniMap.css" />
+	<script src="Plugins/L.Control.MousePosition.js" type="text/javascript"></script>
+	<script src="Plugins/Control.MiniMap.js" type="text/javascript"></script>
+	<style>
+		html, #map {
+			height:100%; 
+		}
+		.leaflet-popup-content {
+			text-align: center;
+			background:White;
+		}
+		.leaflet-popup-content-wrapper{
+			background:Grey;
+		}
+		.leaflet-popup-tip {
+			background:red;
+		}
+	</style>
+</head>
+<body>
+	
+    <nav class="navbar navbar-expand-lg bg-dark text-white">
+
+
+            <a class="navbar-brand" style="color: white !important; font-style: underline !important;" href="#">  Pràctiques de Tècniques de informació Geogràfica</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarText">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" style="color: white !important; font-style: underline !important;" href="#">Incendi Martxuquera <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"style="color: white !important; font-style: underline !important;" href="#">Precipitacions</a>
+                    </li>
+                </ul>
+                <span class="navbar-text">
+                    <img class="logo" style="width:70px" src="./img/upv.jpg" alt="logo upv" />
+                  </span>
+            </div>
+        </nav>
+    <aside class="w-25 p-5">
+            <h3>Mapa de plujes al mes de decembre del 2018.</h3>
+            <small><i>En este trabajo se observa el desarrollo llevado acabo en el laboratorio para el emprendimiento
+                de las nuevas tecnologías para informar sobre la topográfia de españa.</i></small>
+    </aside>
+	<!-- Mapa -->	
+	<div id="map" class="w-80 border border-dark"></div>
+    <!-- Footer -->
+    <footer class="page-footer pt-4 bg-dark text-white" style="font-size:.8rem;">
+
+        <!-- Copyright -->
+        <div class="footer-copyright text-center py-3"> Grau en Tecnologies interactives <br />
+            <a href="https://mdbootstrap.com/education/bootstrap/"> 
+                Diana Hernández Soler i Matthew Conde Oltra</a> © 2019
+        </div>
+        <!-- Copyright -->
+
+    </footer>
+<!-- Footer -->
+    
+    <script src="js/leaflet-hash.js"></script>
+    <script src="js/Autolinker.min.js"></script>
+    <script src="data/contorno_1.js"></script>
+    
+<!-- Plugin para medición -->	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.js"></script>
+	<script src="Plugins/leaflet-measure.js"></script>
+	
+<!-- Plugin para llamar a PNOA -->
+	<script src="Plugins/Leaflet.Spain.WMS.js"></script>
+	<script src="Plugins/leaflet.wms.js"></script>
+<!-- Plugin para Impresión -->	
+	<script src="Plugins/bundle.js"></script>
+<!-- Cargamos Esri Leaflet -->
+	<script src="https://unpkg.com/esri-leaflet@2.2.3/dist/esri-leaflet.js"></script>
+	<script src="Plugins/leaflet.shpfile.js"></script>
+	<script src="Plugins/shp.js"></script>
+	<script src="Plugins/leaflet-providers.js"></script>
+		
+    <script>
+        var map = L.map('map', {center: [39.9233, -0.6139],zoom: 15, zoomControl:false});
+		
+        /*var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[34.625577273472004,-12.519391557437247],[45.72683053663241,11.058608395715913]]);*/
+
+        var inicial = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+		var zoomHome = L.Control.zoomHome();
+			zoomHome.addTo(map);
+
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var bounds_group = new L.featureGroup([]);
+        
+        function setBounds() {}
+        
+        //Tiff lluvias
+        var img_lluviasextract_0 = 'data/lluviasextract_0.png';
+        var img_bounds_lluviasextract_0 = [
+            [35.83143595663553, -9.186044824323636],
+            [43.81740425319029, 4.6885915937851825]
+        ];
+        var layer_lluviasextract_0 = new L.imageOverlay(img_lluviasextract_0, img_bounds_lluviasextract_0);
+        bounds_group.addLayer(layer_lluviasextract_0);
+        //map.addLayer(layer_lluviasextract_0);      
+        
+		function pop_contorno_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['ID'] !== null ? Autolinker.link(feature.properties['ID'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <td colspan="2">' + (feature.properties['CONTOUR'] !== null ? Autolinker.link(feature.properties['CONTOUR'].toLocaleString()) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {
+                maxHeight: 400
+            });
+        }
+
+        function style_contorno_1_0() {
+            return {
+                pane: 'pane_contorno_1',
+                opacity: 1,
+                color: 'rgba(72,123,182,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 3.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_contorno_1');
+        map.getPane('pane_contorno_1').style.zIndex = 401;
+        map.getPane('pane_contorno_1').style['mix-blend-mode'] = 'normal';
+        var layer_contorno_1 = new L.geoJson(json_contorno_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_contorno_1',
+            layerName: 'layer_contorno_1',
+            pane: 'pane_contorno_1',
+            onEachFeature: pop_contorno_1,
+            style: style_contorno_1_0,
+        });
+        bounds_group.addLayer(layer_contorno_1);
+        //map.addLayer(layer_contorno_1);
+        setBounds();
+        L.ImageOverlay.include({
+            getBounds: function() {
+                return this._bounds;
+            }
+        });
+
+
+        // CATASTRO/PARCELARIO layers
+		var Spain_Catastro = L.tileLayer.wms('http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx', {
+			layers: 'catastro',
+			format: 'image/png',
+			transparent: false,
+			continuousWorld : true,
+			attribution: ' <a href="http://www.catastro.meh.es/" target="_blank">DirecciÃ³n General del Catastro</a>'
+		});
+		//Topografico
+		var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {maxZoom: 17,
+			attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
+		});
+		// Shapefiles
+		var incendio = new L.Shapefile('INCENDIO.zip',{
+			onEachFeature: function(feature,marker) {
+			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
+			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
+		}});
+		var Campo2 = new L.Shapefile('OLIVERAS2.zip',{
+			onEachFeature: function(feature,marker) {
+			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
+			+feature.properties.AREA+" m2<br><b> Perímetro:"+feature.properties.PERIMETRO+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
+		}});
+
+		var shpfile = new L.Shapefile('OLIVERAS2.zip', {
+			onEachFeature: function(feature, layer) {
+				if (feature.properties) {
+					layer.bindPopup(Object.keys(feature.properties).map(function(k) {
+						return k + ": " + feature.properties[k];
+					}).join("<br />"), {
+						maxHeight: 200
+					});
+				}
+			}
+		});
+
+        // Menu de capas
+		var baseMaps = [{
+		groupName : "IGN Base",
+		layers : {
+				"Ortoimagen" : Spain_PNOA_Ortoimagen,
+				"Base": Spain_IGNBase,
+				}
+		}, {
+		
+		groupName : "Catastro/DGC",
+		layers : {
+			"Parcelario" :Spain_Catastro,
+			}
+		}, {
+		
+		groupName : "Topografico",
+		layers : {
+			"Topografico" :OpenTopoMap,
+			}
+		}];
+		
+		var overlays = [{
+		groupName : "Efectos",
+		layers : {
+			"Incendio" : incendio,
+			"Cultivos": shpfile,
+			"Lluvias": layer_lluviasextract_0
+			}
+		}, {
+		groupName: "Contornos",
+		layers : {
+			"Lluvias": layer_contorno_1
+		}
+		}];
+
+
+        var options = {
+			container_width : "300px",
+			group_maxHeight : "80px",
+			exclusive : false,
+			collapsed : true,
+			position: 'topright'
+            };
+            
+
+            
+		var control = L.Control.styledLayerControl(baseMaps, overlays, options);
+		map.addControl(control);
+		
+		var measureControl = new L.Control.Measure({
+			position:'topleft',
+			primaryLengthUnit: 'meters', 
+			secondaryLengthUnit: 'kilometers',
+			primaryAreaUnit:'hectares',
+			activeColor: 'red',
+			completedColor: 'blue'
+		});
+		measureControl.addTo(map);
+
+		var regla = document.getElementsByClassName('leaflet-control-measure-toggle')[0];
+        regla.innerHTML = "";
+
+        //Botón para impresión
+        var printer = L.easyPrint({
+					  tileLayer: inicial,
+					  sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
+					  filename: 'myMap',
+					  exportOnly: true,
+					  hideControlContainer: true
+		}).addTo(map);
+		
+
+        var osm2 = new L.TileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png');
+        //MiniMapa
+		var miniMap = new L.Control.MiniMap(osm2, { toggleDisplay: true, zoomLevelOffset: -8 }).addTo(map);
+		
+		var position= new L.Control.MousePosition({position:'bottomleft', separator:'--', prefix:'Coordenadas Lat--Lon : '}).addTo(map);
+		
+		var escala = L.control.scale({ position: 'bottomleft', metric: true, maxWidth: 200}).addTo(map);
+		
+		var zoomBox = L.Control.boxzoom({ position:'topleft' }).addTo(map);
+		
+		var source = L.WMS.source('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?', {
+			opacity: 0.1,
+			info_format: "text/html"
+		});
+		source.getLayer("PARCELA").addTo(map);
+
+	</script>
+</body>
+</html>
