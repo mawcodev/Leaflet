@@ -143,58 +143,12 @@
         
         function setBounds() {}
         
-		var img__0 = 'data/_0.png';
-        var img_bounds__0 = [[35.9005785440016,-9.378595334951417],[43.89024101905597,3.436090360842075]];
-        var layer__0 = new L.imageOverlay(img__0, img_bounds__0);
-        bounds_group.addLayer(layer__0);
-        //map.addLayer(layer__0);
         var img_incendio_1 = 'data/incendio_1.png';
         var img_bounds_incendio_1 = [[38.940827497120885,-0.34859756632133443],[39.002692542436,-0.24808798876083304]];
         var layer_incendio_1 = new L.imageOverlay(img_incendio_1, img_bounds_incendio_1);
         bounds_group.addLayer(layer_incendio_1);
         //map.addLayer(layer_incendio_1);
-
-        //Tiff lluvias
-        var img_lluviasextract_0 = 'data/lluviasextract_0.png';
-        var img_bounds_lluviasextract_0 = [
-            [35.83143595663553, -9.186044824323636],
-            [43.81740425319029, 4.6885915937851825]
-        ];
-        var layer_lluviasextract_0 = new L.imageOverlay(img_lluviasextract_0, img_bounds_lluviasextract_0);
-        bounds_group.addLayer(layer_lluviasextract_0);
-        //map.addLayer(layer_lluviasextract_0);      
         
-		//GeoTiff
-		var tiff = "http://personales.alumno.upv.es/juconol/PRECI.tif";
-		fetch(tiff).then(r => r.arrayBuffer()).then(function(buffer) {
-		var s = L.ScalarField.fromGeoTIFF(buffer);
-		let layer = L.canvasLayer.scalarField(s).addTo(map);
-		layer.on("click", function(e) {
-			if (e.value !== null) {
-			let popup = L.popup()
-			  .setLatLng(e.latlng)
-			  .setContent(`${e.value}`)
-			  .openOn(map);
-			}
-		})
-		});
-
-        setBounds();
-        L.ImageOverlay.include({
-            getBounds: function() {
-                return this._bounds;
-            }
-        });
-
-
-        // CATASTRO/PARCELARIO layers
-		/*var Spain_Catastro = L.tileLayer.wms('http://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx', {
-			layers: 'catastro',
-			format: 'text/xml',//'image/png',
-			transparent: false,
-			continuousWorld : true,
-			attribution: ' <a href="http://www.catastro.meh.es/" target="_blank">DirecciÃ³n General del Catastro</a>'
-		});*/
 		//Topografico
 		var OpenTopoMap = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {maxZoom: 17,
 			attribution: 'Map data: &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, <a href="http://viewfinderpanoramas.org">SRTM</a> | Map style: &copy; <a href="https://opentopomap.org">OpenTopoMap</a> (<a href="https://creativecommons.org/licenses/by-sa/3.0/">CC-BY-SA</a>)'
@@ -202,26 +156,25 @@
 		// Shapefiles
 		var incendioMarxuquera = new L.Shapefile('INCENDIO.zip',{
 			onEachFeature: function(feature,marker) {
+			console.log(feature.properties);
 			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
 			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
 		}});
 
 		var layer_apt_13 = new L.Shapefile('13.zip',{
 			onEachFeature: function(feature,marker) {
-			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
-			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
+			
+			marker.bindPopup("<i><b>Aptitud:</b>"+feature.properties.Aptitud+"<br/><i><b>Área:</b>"+feature.properties.Área);
 		}});
 
 		var layer_apt_14 = new L.Shapefile('14.zip',{
 			onEachFeature: function(feature,marker) {
-			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
-			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
+			marker.bindPopup("<h3>Parcela (con aptitud):" +feature.properties.Aptitud+"</h3><i><b>Área:</b>"+feature.properties.Área);
 		}});
 
 		var layer_apt_15 = new L.Shapefile('15.zip',{
 			onEachFeature: function(feature,marker) {
-			marker.bindPopup("<h3>Arbol número:" +feature.properties.Cod_Arbol+"</h3><i><b>Diametro:</b>"+feature.properties.Avg_CHM+" m <br><b>Area:</b>"
-			+feature.properties.Shape_Area+" m2<br><b> Perímetro:"+feature.properties.Shape_Leng+" m <b><br><b>Número Ptos. Lidar:"+feature.properties.Count_+"</i><b>");
+			marker.bindPopup("<h3>Parcela (con aptitud):" +feature.properties.Aptitud+"</h3><i><b>Área:</b>"+feature.properties.Área);
 		}});
 
         // Menu de capas
@@ -233,12 +186,6 @@
 				}
 		}, {
 		
-		/*groupName : "Catastro/DGC",
-		layers : {
-			"Parcelario" :Spain_Catastro,
-			}
-		}, {*/
-		
 		groupName : "Topografico",
 		layers : {
 			"Topografico" :OpenTopoMap,
@@ -246,16 +193,9 @@
 		}];
 		
 		var overlays = [{
-		groupName : "Efectos",
+		groupName : "Desastres naturales",
 		layers : {
-			"Incendio" : incendioMarxuquera,
-			"Lluvias": layer_lluviasextract_0,
-			"Temperaturas": layer__0
-			}
-		}, {
-		groupName: "Contornos",
-		layers : {
-			//"Lluvias": layer_contorno_1
+			"Incendio" : incendioMarxuquera
 			}
 		}, {
 		groupName: "Repoblación",
@@ -279,6 +219,52 @@
 
             
 		var control = L.Control.styledLayerControl(baseMaps, overlays, options);
+
+
+	//GeoTiff precipitaciones
+	var tiff = "http://personales.alumno.upv.es/juconol/PRECI.tif";
+			fetch(tiff).then(r => r.arrayBuffer()).then(function(buffer) {
+			var s = L.ScalarField.fromGeoTIFF(buffer);
+			let layer = L.canvasLayer.scalarField(s, {
+					color: chroma.scale(['white', 'blue', 'black']).domain(s.range),
+					opacity: 0.60
+				});//.addTo(map);
+			layer.on("click", function(e) {
+				if (e.value !== null) {
+				let popup = L.popup()
+				.setLatLng(e.latlng)
+				.setContent(`${e.value}`)
+				.openOn(map);
+				}
+			});
+			control.addOverlay(layer, "Lluvias", {
+					groupName: "Precipitaciones",
+				});
+
+        });
+
+	//GeoTiff temperaturas
+	var tiffTemperatura = "http://personales.alumno.upv.es/juconol/TEMP.tif";
+			fetch(tiffTemperatura).then(r => r.arrayBuffer()).then(function(buffer) {
+			var sTemperatura = L.ScalarField.fromGeoTIFF(buffer);
+			let layerTemperatura = L.canvasLayer.scalarField(sTemperatura, {
+					color: chroma.scale(['green','yellow', 'orange', 'red']).domain(sTemperatura.range),
+					opacity: 0.60
+				});//.addTo(map);
+			layerTemperatura.on("click", function(e) {
+				if (e.value !== null) {
+				let popup = L.popup()
+				.setLatLng(e.latlng)
+				.setContent(`${e.value}`)
+				.openOn(map);
+				}
+			});
+			control.addOverlay(layerTemperatura, "Temperaturas", {
+					groupName: "Temp_2016",
+				});
+
+        });
+
 		map.addControl(control);
 		
 		var measureControl = new L.Control.Measure({
@@ -298,7 +284,7 @@
         var printer = L.easyPrint({
 					  tileLayer: inicial,
 					  sizeModes: ['Current', 'A4Landscape', 'A4Portrait'],
-					  filename: 'myMap',
+					  filename: 'map',
 					  exportOnly: true,
 					  hideControlContainer: true
 		}).addTo(map);
@@ -314,11 +300,11 @@
 		
 		var zoomBox = L.Control.boxzoom({ position:'topleft' }).addTo(map);
 		
-		var source = L.WMS.source('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?', {
+		/*var source = L.WMS.source('https://ovc.catastro.meh.es/Cartografia/WMS/ServidorWMS.aspx?', {
 			opacity: 0.1,
 			info_format: "text/html"
 		});
-		source.getLayer("PARCELA").addTo(map);
+		source.getLayer("PARCELA").addTo(map);*/
 
 	</script>
 </body>
