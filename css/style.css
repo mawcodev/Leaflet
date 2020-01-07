@@ -1,0 +1,15 @@
+@charset "utf-8";
+
+aside {
+	float:Right;
+	border-radius:2px;
+	font-family: "helvetica";
+	height: 100%;
+	width: 220px; 
+	position: relative;
+}
+.search-tooltip {
+		width: 220px;
+		height: 220px;
+	}
+

@@ -2,7 +2,8 @@
 <html>
 <head>
 	<meta charset="UTF-8">
-<!-- Estilos css --> 
+<!-- Estilos css -->
+	<link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="css/leaflet.css">
 	<link rel="stylesheet" href="css/qgis2web.css">
     <link rel="stylesheet" href="css/fontawesome-all.min.css">
@@ -15,10 +16,7 @@
 	
 <!-- Plugin para Estilos Control de Capas -->	
 	<link rel="stylesheet" href="Plugins/styledLayerControl.css"/>
-	<script src="Plugins/styledLayerControl.js"></script>
-	
-<!-- Estilos css -->
-	<link rel="stylesheet" href="Plugins/oliveras_MOD.css"/>
+	<script src="Plugins/styledLayerControl.js"></script>	
 	
 <!-- Plugin para Medición areas y distancias-->		
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/0.3.2/leaflet.draw.css" >
@@ -58,22 +56,22 @@
 		}
 	</style>
 </head>
-<body>
+<body style ="height: 90%;">
 	
     <nav class="navbar navbar-expand-lg bg-dark text-white">
 
 
-            <a class="navbar-brand" style="color: white !important; font-style: underline !important;" href="#">  Pràctiques de Tècniques de informació Geogràfica</a>
+            <a class="navbar-brand" style="color: white !important; font-style: underline !important;" href="#">  Prácticas de Tecnicas de información geográfica</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
               <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav mr-auto">
                     <li class="nav-item active">
-                        <a class="nav-link" style="color: white !important; font-style: underline !important;" href="#">Incendi Martxuquera <span class="sr-only">(current)</span></a>
+                        <a class="nav-link" style="color: white !important; font-style: underline !important;" href="#"><span class="sr-only">(current)</span></a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link"style="color: white !important; font-style: underline !important;" href="#">Precipitacions</a>
+                        <a class="nav-link"style="color: white !important; font-style: underline !important;" href="#"></a>
                     </li>
                 </ul>
                 <span class="navbar-text">
@@ -82,19 +80,59 @@
             </div>
         </nav>
     <aside class="w-25 p-5">
-            <h3>Mapa de plujes al mes de decembre del 2018.</h3>
+            <h3>MAPAS</h3>
             <small><i>En este trabajo se observa el desarrollo llevado acabo en el laboratorio para el emprendimiento
-                de las nuevas tecnologías para informar sobre la topográfia de españa.</i></small>
+				de las nuevas tecnologías para informar sobre la topográfia de españa. En el menú dentro del mapa a la derecha, encontramos:</i>
+				<ul>
+					<li>Bases comunes
+						<ol>
+							<li>Ortoimagen</li>
+							<li>Base</li>
+						</ol>
+					</li>
+					<li>Topográfico
+						<ol>
+							<li>Topográfico</li>
+						</ol>
+					</li>
+					<li>Litología
+						<ol>
+							<li>España</li>
+						</ol>
+					</li>
+					<li>Desastres naturales
+						<ol>
+							<li>Incendio Marxuquera</li>
+						</ol>
+					</li>
+					<li>Repoblación
+						<ol>
+							<li>Aptitud 13</li>
+							<li>Aptitud 14</li>
+							<li>Aptitud 15</li>
+						</ol>
+					</li>
+					<li>Precipitaciones
+						<ol>
+							<li>Lluvias del 2016</li>
+						</ol>
+					</li>
+					<li>Temperaturas
+						<ol>
+							<li>Temperaturas del 2016</li>
+						</ol>
+					</li>
+				</ul>
+			</small>
     </aside>
 	<!-- Mapa -->	
 	<div id="map" class="w-80 border border-dark"></div>
     <!-- Footer -->
-    <footer class="page-footer pt-4 bg-dark text-white" style="font-size:.8rem;">
+    <footer class="page-footer  bg-dark text-white" style="font-size:.8rem;">
 
         <!-- Copyright -->
-        <div class="footer-copyright text-center py-3"> Grau en Tecnologies interactives <br />
-            <a href="https://mdbootstrap.com/education/bootstrap/"> 
-                Diana Hernández Soler i Matthew Conde Oltra</a> © 2019
+        <div class="footer-copyright text-center py-3"> Grado en Tecnologias Interactivas <br />
+                Diana Hernández Soler i Matthew Conde Oltra © 2019
         </div>
         <!-- Copyright -->
 
@@ -162,6 +200,14 @@
 		"Matorral boscoso de transición", "Espacios con vegetación escasa", "Zonas quemadas"];
 
 		// Shapefiles
+
+		var litologia = new L.Shapefile('LITOLOGIA.zip',{
+			onEachFeature: function(feature,marker) {
+			//console.log(feature.properties);
+			marker.bindPopup("<h4>"+feature.properties.Nombre+"</h4><br/><i><b>Capital: </b>"+feature.properties.Capital+"<br/><i><b>Área: </b>"
+			+Math.round(feature.properties.Shape_Area/1000000)+" km<sup>2</sup>");
+		}});
+
 		var incendioMarxuquera = new L.Shapefile('INCENDIO.zip',{
 			onEachFeature: function(feature,marker) {
 			//console.log(feature.properties);
@@ -171,22 +217,22 @@
 		var layer_apt_13 = new L.Shapefile('13.zip',{
 			onEachFeature: function(feature,marker) {
 			
-			marker.bindPopup("<i><b>Aptitud: </b>"+feature.properties.Aptitud+"<br/><i><b>Área: </b>"+feature.properties.Área);
+			marker.bindPopup("<i><b>Aptitud: </b>"+feature.properties.Aptitud+"<br/><i><b>Área: </b>"+feature.properties.Área+" m<sup>2</sup>");
 		}});
 
 		var layer_apt_14 = new L.Shapefile('14.zip',{
 			onEachFeature: function(feature,marker) {
-			marker.bindPopup("<h3>Parcela (con aptitud): " +feature.properties.Aptitud+"</h3><i><b>Área: </b>"+feature.properties.Área);
+			marker.bindPopup("<h3>Parcela (con aptitud): " +feature.properties.Aptitud+"</h3><i><b>Área: </b>"+feature.properties.Área+" m<sup>2</sup>");
 		}});
 
 		var layer_apt_15 = new L.Shapefile('15.zip',{
 			onEachFeature: function(feature,marker) {
-			marker.bindPopup("<h3>Parcela (con aptitud): " +feature.properties.Aptitud+"</h3><i><b>Área: </b>"+feature.properties.Área);
+			marker.bindPopup("<h3>Parcela (con aptitud): " +feature.properties.Aptitud+"</h3><i><b>Área: </b>"+feature.properties.Área+" m<sup>2</sup>");
 		}});
 
         // Menu de capas
 		var baseMaps = [{
-		groupName : "IGN Base",
+		groupName : "Bases comunes",
 		layers : {
 				"Ortoimagen" : Spain_PNOA_Ortoimagen,
 				"Base": Spain_IGNBase,
@@ -200,6 +246,11 @@
 		}];
 		
 		var overlays = [{
+		groupName : "Litologia",
+		layers : {
+			"España" : litologia
+			}
+		}, {
 		groupName : "Desastres naturales",
 		layers : {
 			"Incendio" : incendioMarxuquera
@@ -238,9 +289,11 @@
 				});//.addTo(map);
 			layer.on("click", function(e) {
 				if (e.value !== null) {
+				var volumen = Math.round(e.value);
 				let popup = L.popup()
 				.setLatLng(e.latlng)
-				.setContent(`${e.value}`)
+				.setContent(volumen+" l/m<sup>2</sup>")
+				//.setContent(`${e.value}`)
 				.openOn(map);
 				}
 			});
@@ -260,9 +313,10 @@
 				});//.addTo(map);
 			layerTemperatura.on("click", function(e) {
 				if (e.value !== null) {
+				var temp = Math.round(e.value);
 				let popup = L.popup()
 				.setLatLng(e.latlng)
-				.setContent(`${e.value}`)
+				.setContent(temp+" <sup>o</sup>C")
 				.openOn(map);
 				}
 			});
